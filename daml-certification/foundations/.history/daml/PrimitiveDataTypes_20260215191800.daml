@@ -1,0 +1,503 @@
+-- ============================================================================
+-- DAML PRIMITIVE DATA TYPES - COMPREHENSIVE LESSON
+-- ============================================================================
+-- This module provides a complete guide to primitive data types in DAML
+-- with practical examples and test cases.
+
+module PrimitiveDataTypes where
+
+import Daml.Script
+import DA.Date
+import DA.Time
+import DA.Optional
+
+-- ============================================================================
+-- 1. NUMERIC TYPES
+-- ============================================================================
+
+-- INT - Whole numbers (64-bit signed integer)
+-- Range: -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807
+intExample : Int
+intExample = 42
+
+negativeInt : Int
+negativeInt = -100
+
+-- INT OPERATIONS
+intAddition : Int
+intAddition = 10 + 5  -- Result: 15
+
+intSubtraction : Int
+intSubtraction = 10 - 5  -- Result: 5
+
+intMultiplication : Int
+intMultiplication = 10 * 5  -- Result: 50
+
+intDivision : Int
+intDivision = 10 / 3  -- Result: 3 (integer division, truncates)
+
+intModulo : Int
+intModulo = 10 % 3  -- Result: 1 (remainder)
+
+intPower : Int
+intPower = 2 ^ 8  -- Result: 256
+
+-- DECIMAL - Fixed-point decimal numbers (10 decimal places)
+-- Used for financial calculations
+decimalExample : Decimal
+decimalExample = 123.456789
+
+decimalPrecision : Decimal
+decimalPrecision = 0.0000000001  -- Smallest unit
+
+-- DECIMAL OPERATIONS
+decimalAddition : Decimal
+decimalAddition = 10.5 + 3.75  -- Result: 14.25
+
+decimalMultiplication : Decimal
+decimalMultiplication = 10.5 * 2.0  -- Result: 21.0
+
+-- NUMERIC - Custom precision numeric type
+-- Numeric n represents a number with n decimal places
+numericExample : Numeric 2
+numericExample = 99.99  -- Exactly 2 decimal places
+
+numericCurrency : Numeric 2
+numericCurrency = 1234.56
+
+-- ============================================================================
+-- 2. TEXT (STRINGS)
+-- ============================================================================
+
+-- TEXT - Unicode text strings
+textExample : Text
+textExample = "Hello, DAML!"
+
+emptyText : Text
+emptyText = ""
+
+multilineText : Text
+multilineText = "Line 1\nLine 2\nLine 3"
+
+-- TEXT OPERATIONS
+textConcatenation : Text
+textConcatenation = "Hello, " <> "World!"  -- Result: "Hello, World!"
+
+-- TEXT FUNCTIONS (from DA.Text)
+textLength : Text -> Int
+textLength txt = DA.Text.length txt
+
+textToUpper : Text -> Text
+textToUpper txt = DA.Text.toUpper txt
+
+textToLower : Text -> Text
+textToLower txt = DA.Text.toLower txt
+
+-- ============================================================================
+-- 3. BOOLEAN
+-- ============================================================================
+
+-- BOOL - True or False
+boolTrue : Bool
+boolTrue = True
+
+boolFalse : Bool
+boolFalse = False
+
+-- BOOLEAN OPERATIONS
+boolAnd : Bool
+boolAnd = True && False  -- Result: False
+
+boolOr : Bool
+boolOr = True || False  -- Result: True
+
+boolNot : Bool
+boolNot = not True  -- Result: False
+
+-- COMPARISON OPERATORS (return Bool)
+equalityCheck : Bool
+equalityCheck = 5 == 5  -- Result: True
+
+inequalityCheck : Bool
+inequalityCheck = 5 /= 3  -- Result: True
+
+greaterThan : Bool
+greaterThan = 10 > 5  -- Result: True
+
+lessThanOrEqual : Bool
+lessThanOrEqual = 5 <= 5  -- Result: True
+
+-- ============================================================================
+-- 4. DATE AND TIME TYPES
+-- ============================================================================
+
+-- DATE - Calendar date
+dateExample : Date
+dateExample = date 2026 Feb 15
+
+-- TIME - Timestamp with microsecond precision
+timeExample : Time
+timeExample = time (date 2026 Feb 15) 14 30 0  -- 2:30 PM
+
+-- RELATIVE TIME - Duration
+relativeTimeExample : RelTime
+relativeTimeExample = days 7  -- 7 days
+
+hoursExample : RelTime
+hoursExample = hours 24
+
+minutesExample : RelTime
+minutesExample = minutes 90
+
+-- DATE/TIME OPERATIONS
+addDaysToDate : Date -> Int -> Date
+addDaysToDate d n = addDays d n
+
+addTimeToTime : Time -> RelTime -> Time
+addTimeToTime t rt = addRelTime t rt
+
+-- ============================================================================
+-- 5. PARTY TYPE
+-- ============================================================================
+
+-- PARTY - Represents a participant in the ledger
+-- Parties are created/allocated and cannot be created from strings directly
+-- They represent real entities that can sign contracts
+
+-- In scripts, we allocate parties:
+-- alice <- allocateParty "Alice"
+
+-- ============================================================================
+-- 6. UNIT TYPE
+-- ============================================================================
+
+-- UNIT - Type with single value (), represents "no value"
+-- Often used in functions that perform actions without returning data
+unitExample : ()
+unitExample = ()
+
+-- Functions returning Unit often have side effects
+doNothing : () -> ()
+doNothing _ = ()
+
+-- ============================================================================
+-- 7. OPTIONAL TYPES
+-- ============================================================================
+
+-- OPTIONAL - Represents a value that may or may not exist
+-- Similar to Maybe in Haskell, Option in Scala
+
+optionalWithValue : Optional Int
+optionalWithValue = Some 42
+
+optionalEmpty : Optional Int
+optionalEmpty = None
+
+-- OPTIONAL OPERATIONS
+unwrapOptional : Optional Int -> Int
+unwrapOptional (Some x) = x
+unwrapOptional None = 0  -- Default value
+
+-- Using fromOptional (safer)
+safeUnwrap : Optional Int -> Int
+safeUnwrap opt = fromOptional 0 opt
+
+-- Checking if Optional has a value
+hasValue : Optional Int -> Bool
+hasValue (Some _) = True
+hasValue None = False
+
+-- Using isSome and isNone from DA.Optional
+checkSome : Optional Int -> Bool
+checkSome opt = isSome opt
+
+checkNone : Optional Int -> Bool
+checkNone opt = isNone opt
+
+-- ============================================================================
+-- 8. LISTS
+-- ============================================================================
+
+-- LIST - Homogeneous collection (all elements same type)
+intList : [Int]
+intList = [1, 2, 3, 4, 5]
+
+textList : [Text]
+textList = ["apple", "banana", "cherry"]
+
+emptyList : [Int]
+emptyList = []
+
+-- LIST OPERATIONS
+headOfList : [Int] -> Optional Int
+headOfList [] = None
+headOfList (x :: _) = Some x
+
+tailOfList : [Int] -> [Int]
+tailOfList [] = []
+tailOfList (_ :: xs) = xs
+
+-- Concatenation
+listConcat : [Int]
+listConcat = [1, 2, 3] ++ [4, 5, 6]  -- Result: [1,2,3,4,5,6]
+
+-- Cons operator (prepend)
+consExample : [Int]
+consExample = 0 :: [1, 2, 3]  -- Result: [0,1,2,3]
+
+-- List length
+listLength : [Int] -> Int
+listLength xs = length xs
+
+-- List map
+doubleList : [Int] -> [Int]
+doubleList xs = map (\x -> x * 2) xs
+
+-- List filter
+filterEvens : [Int] -> [Int]
+filterEvens xs = filter (\x -> x % 2 == 0) xs
+
+-- List fold
+sumList : [Int] -> Int
+sumList xs = foldl (+) 0 xs
+
+-- ============================================================================
+-- 9. TUPLES
+-- ============================================================================
+
+-- TUPLE - Fixed-size collection of values (can be different types)
+
+-- Pair (2-tuple)
+pairExample : (Int, Text)
+pairExample = (42, "answer")
+
+-- Triple (3-tuple)
+tripleExample : (Int, Text, Bool)
+tripleExample = (1, "hello", True)
+
+-- Quad (4-tuple)
+quadExample : (Int, Int, Int, Int)
+quadExample = (1, 2, 3, 4)
+
+-- TUPLE OPERATIONS
+-- Accessing tuple elements
+getFirst : (Int, Text) -> Int
+getFirst (x, _) = x
+
+getSecond : (Int, Text) -> Text
+getSecond (_, y) = y
+
+-- Using fst and snd (only for pairs)
+firstElement : (Int, Text) -> Int
+firstElement pair = fst pair
+
+secondElement : (Int, Text) -> Text
+secondElement pair = snd pair
+
+-- Swapping tuple elements
+swapPair : (Int, Text) -> (Text, Int)
+swapPair (x, y) = (y, x)
+
+-- ============================================================================
+-- 10. RECORDS (CUSTOM DATA TYPES)
+-- ============================================================================
+
+-- Records are user-defined types with named fields
+data Person = Person
+  with
+    name : Text
+    age : Int
+    email : Text
+  deriving (Eq, Show)
+
+-- Creating a record
+personExample : Person
+personExample = Person with
+  name = "Alice"
+  age = 30
+  email = "alice@example.com"
+
+-- Accessing record fields
+getPersonName : Person -> Text
+getPersonName p = p.name
+
+getPersonAge : Person -> Int
+getPersonAge p = p.age
+
+-- Updating record fields
+updatePersonAge : Person -> Int -> Person
+updatePersonAge p newAge = p with age = newAge
+
+-- ============================================================================
+-- 11. TYPE CONVERSIONS
+-- ============================================================================
+
+-- Int to Decimal
+intToDecimal : Int -> Decimal
+intToDecimal n = intToDecimal n
+
+-- Decimal to Int (rounds toward zero)
+decimalToInt : Decimal -> Int
+decimalToInt d = truncate d
+
+-- Int to Text
+intToText : Int -> Text
+intToText n = show n
+
+-- Decimal to Text
+decimalToText : Decimal -> Text
+decimalToText d = show d
+
+-- Bool to Text
+boolToText : Bool -> Text
+boolToText b = show b
+
+-- ============================================================================
+-- 12. TYPE ALIASES
+-- ============================================================================
+
+-- Creating type aliases for clarity
+type Age = Int
+type EmailAddress = Text
+type Price = Decimal
+
+-- Using type aliases
+personAge : Age
+personAge = 25
+
+emailAddr : EmailAddress
+emailAddr = "user@example.com"
+
+productPrice : Price
+productPrice = 99.99
+
+-- ============================================================================
+-- TEST SCRIPT - Demonstrates all primitive types in action
+-- ============================================================================
+
+testPrimitiveTypes : Script ()
+testPrimitiveTypes = do
+  -- NUMERIC TESTS
+  debug "=== NUMERIC TYPES ==="
+  debug $ "Int example: " <> show intExample
+  debug $ "Decimal example: " <> show decimalExample
+  debug $ "Int addition: 10 + 5 = " <> show intAddition
+  debug $ "Decimal multiplication: 10.5 * 2.0 = " <> show decimalMultiplication
+  debug $ "Int power: 2^8 = " <> show intPower
+
+  -- TEXT TESTS
+  debug "\n=== TEXT TYPES ==="
+  debug $ "Text example: " <> textExample
+  debug $ "Text concatenation: " <> textConcatenation
+  debug $ "Text length: " <> show (DA.Text.length textExample)
+
+  -- BOOLEAN TESTS
+  debug "\n=== BOOLEAN TYPES ==="
+  debug $ "Boolean AND: True && False = " <> show boolAnd
+  debug $ "Boolean OR: True || False = " <> show boolOr
+  debug $ "Equality: 5 == 5 = " <> show equalityCheck
+  debug $ "Greater than: 10 > 5 = " <> show greaterThan
+
+  -- DATE/TIME TESTS
+  debug "\n=== DATE AND TIME ==="
+  debug $ "Date example: " <> show dateExample
+  debug $ "Time example: " <> show timeExample
+  let futureDate = addDays dateExample 7
+  debug $ "Date + 7 days: " <> show futureDate
+
+  -- OPTIONAL TESTS
+  debug "\n=== OPTIONAL TYPES ==="
+  debug $ "Optional with value: " <> show optionalWithValue
+  debug $ "Optional empty: " <> show optionalEmpty
+  debug $ "Unwrap Some 42: " <> show (unwrapOptional optionalWithValue)
+  debug $ "Is Some 42 some? " <> show (isSome optionalWithValue)
+  debug $ "Is None none? " <> show (isNone optionalEmpty)
+
+  -- LIST TESTS
+  debug "\n=== LISTS ==="
+  debug $ "Int list: " <> show intList
+  debug $ "List concatenation: " <> show listConcat
+  debug $ "List length: " <> show (listLength intList)
+  debug $ "Double list [1,2,3]: " <> show (doubleList [1, 2, 3])
+  debug $ "Filter evens [1..6]: " <> show (filterEvens [1, 2, 3, 4, 5, 6])
+  debug $ "Sum list [1..5]: " <> show (sumList [1, 2, 3, 4, 5])
+
+  -- TUPLE TESTS
+  debug "\n=== TUPLES ==="
+  debug $ "Pair example: " <> show pairExample
+  debug $ "Triple example: " <> show tripleExample
+  debug $ "First of pair: " <> show (getFirst pairExample)
+  debug $ "Swapped pair: " <> show (swapPair pairExample)
+
+  -- RECORD TESTS
+  debug "\n=== RECORDS ==="
+  debug $ "Person: " <> show personExample
+  debug $ "Person name: " <> getPersonName personExample
+  let olderPerson = updatePersonAge personExample 35
+  debug $ "Updated person: " <> show olderPerson
+
+  -- TYPE CONVERSION TESTS
+  debug "\n=== TYPE CONVERSIONS ==="
+  debug $ "Int 42 to text: " <> show 42
+  debug $ "Decimal 3.14 to Int: " <> show (truncate 3.14)
+  debug $ "Bool True to text: " <> show True
+
+  return ()
+
+-- ============================================================================
+-- PRACTICAL EXAMPLES
+-- ============================================================================
+
+-- Example 1: Calculate compound interest
+calculateCompoundInterest : Decimal -> Decimal -> Int -> Decimal
+calculateCompoundInterest principal rate years =
+  principal * ((1.0 + rate) ^ years)
+
+-- Example 2: Validate email format (simple check)
+isValidEmail : Text -> Bool
+isValidEmail email =
+  DA.Text.contains "@" email && DA.Text.contains "." email
+
+-- Example 3: Calculate age from birth year
+calculateAge : Int -> Int -> Int
+calculateAge currentYear birthYear = currentYear - birthYear
+
+-- Example 4: Format currency
+formatCurrency : Decimal -> Text
+formatCurrency amount = "$" <> show amount
+
+-- Example 5: Working with optional data
+findInList : (a -> Bool) -> [a] -> Optional a
+findInList predicate [] = None
+findInList predicate (x :: xs) =
+  if predicate x then Some x
+  else findInList predicate xs
+
+-- Example 6: Safe division
+safeDivide : Decimal -> Decimal -> Optional Decimal
+safeDivide _ 0.0 = None
+safeDivide x y = Some (x / y)
+
+-- Test practical examples
+testPracticalExamples : Script ()
+testPracticalExamples = do
+  debug "=== PRACTICAL EXAMPLES ==="
+
+  let investment = calculateCompoundInterest 1000.0 0.05 10
+  debug $ "Compound interest: $1000 at 5% for 10 years = $" <> show investment
+
+  debug $ "Is 'user@example.com' valid? " <> show (isValidEmail "user@example.com")
+  debug $ "Is 'invalid' valid? " <> show (isValidEmail "invalid")
+
+  let age = calculateAge 2026 1990
+  debug $ "Age of person born in 1990: " <> show age
+
+  debug $ "Format $1234.56: " <> formatCurrency 1234.56
+
+  let result = safeDivide 10.0 2.0
+  debug $ "10 / 2 = " <> show result
+
+  let errorResult = safeDivide 10.0 0.0
+  debug $ "10 / 0 = " <> show errorResult
+
+  return ()

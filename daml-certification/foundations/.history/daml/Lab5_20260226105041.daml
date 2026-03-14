@@ -1,0 +1,39 @@
+module Lab5 where
+import Daml.Script
+import DA.Map qualified as Map
+import DA.Map (Map)
+import DA.Text (words)
+
+song = [("do", "a deer, a female deer"), ("re", "a drop of golden sun"), ("mi", "a name, I call myself"), ("fa", "a long long way to run")]
+
+-- Build a Map from a list of tuples
+songMap : Map Text Text
+songMap = Map.fromList song
+
+testScript : Script ()
+testScript = do
+  let x = map fst song
+  let y = map snd song
+  debug $ "Keys: " <> show x
+  debug $ "Values: " <> show y
+
+termFrequency : Text -> Text -> Decimal
+termFrequency term sentence =
+  let ws = words sentence
+      count = length (filter (== term) ws)
+      total = length ws
+  in intToDecimal count / intToDecimal total
+
+multiTermFrequency : Text -> [Text] -> [Decimal]
+multiTermFrequency term sentences = map (termFrequency term) sentences
+
+testMultiTermFrequency : Script ()
+testMultiTermFrequency = script do
+  let x = "hello"
+  let y = [ "hello from the other side I must have called a thousand times",
+            "You say goodbye and I say hello hello hello",
+            "hello is it me you're looking for",
+            "hello hello is anyone home"
+            ]
+  debug $ multiTermFrequency x y
+  return ()

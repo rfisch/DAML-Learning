@@ -1,0 +1,11 @@
+module Lab6 where
+import Daml.Script
+
+data Account = Account with
+	owner : Party
+	balance : Decimal
+	deriving (Eq, Show)	
+
+
+class SafeAccount a where 
+	safeQuery : a

@@ -1,0 +1,17 @@
+module Lab3 where
+import Daml.Script
+
+
+data Person = Person with
+	name : Text
+	email : Text
+		deriving (Eq, Show, Ord)
+
+
+
+testLab2 : Script ()
+testLab2 = script do
+	let p1 = Person with name = "Alice", email = "alice@domain.com" in
+	let p2 = Person with name = "Bob", email = "bob@domain.com" in
+	debug p1
+	debug p2

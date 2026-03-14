@@ -1,0 +1,33 @@
+module Lab2 where
+import Daml.Script
+import DA.List
+
+song : [(Text, Text)]
+song =
+  [ ("do", "a deer, a female deer")
+  , ("re", "a drop of golden sun")
+  , ("mi", "a name, I call myself")
+  , ("fa", "a long long way to run")
+  ]
+
+
+termFrequency : Text -> Text -> Decimal
+termFrequency term phrase = 
+	let words : [Text] = Text.words phrase
+	let matches : Int = filter (\w -> w == term) words
+	let total : Int = length words
+	in if total == 0 then 0.0 else (toDecimal matches) / (toDecimal total)
+	
+	
+
+testLab2 : Script ()
+testLab2 = script do
+	let l1 = [fst(head song),fst(head (tail song)), fst(head (tail (tail song))), fst(head (tail (tail (tail song))))] 
+	let l2 = [snd(head song),snd(head (tail song)), snd(head (tail (tail song))), snd(head (tail (tail (tail song))))] 
+	let l3 = reverse l1
+	let l4 = reverse l2 
+	debug l1
+	debug l2
+	debug l3
+	debug l4
+	debug $ termFrequency "long" "a long long way to run"

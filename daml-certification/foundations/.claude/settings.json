@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/ryanfisch/Code/daml-certification/**)",
+      "Bash(daml install 2.10.0)",
+      "Read(//Users/ryanfisch/.daml/bin/**)",
+      "Bash(~/.daml/bin/daml install 2.10.0)",
+      "Bash(~/.daml/bin/daml build)"
+    ]
+  }
+}

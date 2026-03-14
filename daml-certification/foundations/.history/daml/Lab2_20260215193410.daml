@@ -1,0 +1,9 @@
+module Lab2 where
+import Daml.Script
+import DA.Tuple
+
+song = [("do", "a deer, a female deer"), ("re", "a drop of golden sun"), ("mi", "a name, I call myself"), ("fa", "a long long way to run")]
+
+testLab2 : Script ()
+testLab2 = do
+	debug $ song

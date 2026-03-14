@@ -1,0 +1,16 @@
+module Functions where
+import Daml.Script
+-- Int <maps to> Int
+
+increment n = n + 1
+
+add x y = x + y
+
+mult x y = x * y
+
+testFunctions: Script()
+testFunctions = script do
+  debug $ increment 3;
+  debug (increment 4)
+  debug $ add 3 3;
+  debug $ mult 3 3;

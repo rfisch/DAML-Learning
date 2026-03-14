@@ -1,0 +1,3 @@
+module Mod2Lab1Test where
+import Daml.Script
+import Mod2Lab1

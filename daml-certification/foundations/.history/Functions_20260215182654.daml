@@ -1,0 +1,12 @@
+--modue <Must match file name> where
+module Functions where
+import Daml.Script
+-- Int <maps to> Int
+increment: Int -> Int
+increment n = n + 1
+
+testFunctions: Script()
+testFunctions = script do
+  debug $ increment 3;
+	
+

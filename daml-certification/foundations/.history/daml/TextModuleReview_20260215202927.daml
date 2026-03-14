@@ -1,0 +1,711 @@
+-- ============================================================================
+-- DAML TEXT MODULE - COMPREHENSIVE REVIEW
+-- ============================================================================
+-- This module provides a complete guide to the DA.Text module in DAML
+-- with practical examples and test cases for text manipulation.
+--
+-- The DA.Text module provides extensive string manipulation capabilities
+-- for working with Unicode text in DAML applications.
+-- ============================================================================
+
+module TextModuleReview where
+
+import Daml.Script
+import DA.Text as T
+import DA.Optional
+
+-- ============================================================================
+-- 1. TEXT BASICS
+-- ============================================================================
+
+-- Text is DAML's built-in type for Unicode strings
+-- All text operations are Unicode-aware
+
+basicText : Text
+basicText = "Hello, DAML!"
+
+emptyText : Text
+emptyText = ""
+
+unicodeText : Text
+unicodeText = "Hello, 世界! 🌍"
+
+multilineText : Text
+multilineText = "Line 1\nLine 2\nLine 3"
+
+-- ============================================================================
+-- 2. TEXT LENGTH AND EMPTINESS
+-- ============================================================================
+
+-- Get the length of a text (number of characters)
+textLength : Text -> Int
+textLength txt = T.length txt
+
+-- Example usage:
+lengthExample1 : Int
+lengthExample1 = T.length "Hello"  -- Result: 5
+
+lengthExample2 : Int
+lengthExample2 = T.length ""  -- Result: 0
+
+-- Check if text is empty
+isEmpty : Text -> Bool
+isEmpty txt = T.null txt
+
+-- Example usage:
+emptyCheck1 : Bool
+emptyCheck1 = T.null ""  -- Result: True
+
+emptyCheck2 : Bool
+emptyCheck2 = T.null "Hello"  -- Result: False
+
+-- ============================================================================
+-- 3. TEXT CONCATENATION
+-- ============================================================================
+
+-- Using the <> operator (preferred)
+concatenateWithOperator : Text
+concatenateWithOperator = "Hello, " <> "World!"
+
+-- Using append function
+concatenateWithAppend : Text
+concatenateWithAppend = T.append "Hello, " "World!"
+
+-- Concatenating multiple texts
+multiConcat : Text
+multiConcat = "First" <> " " <> "Second" <> " " <> "Third"
+
+-- ============================================================================
+-- 4. CASE CONVERSION
+-- ============================================================================
+
+-- Convert to uppercase
+toUpperExample : Text -> Text
+toUpperExample txt = T.toUpper txt
+
+upperTest : Text
+upperTest = T.toUpper "hello world"  -- Result: "HELLO WORLD"
+
+-- Convert to lowercase
+toLowerExample : Text -> Text
+toLowerExample txt = T.toLower txt
+
+lowerTest : Text
+lowerTest = T.toLower "HELLO WORLD"  -- Result: "hello world"
+
+-- ============================================================================
+-- 5. TRIMMING AND STRIPPING
+-- ============================================================================
+
+-- Remove leading and trailing whitespace
+trimExample : Text -> Text
+trimExample txt = T.trim txt
+
+trimTest1 : Text
+trimTest1 = T.trim "  hello  "  -- Result: "hello"
+
+trimTest2 : Text
+trimTest2 = T.trim "\n\t  text  \t\n"  -- Result: "text"
+
+-- Remove leading whitespace
+trimLeftExample : Text -> Text
+trimLeftExample txt = T.ltrim txt
+
+trimLeftTest : Text
+trimLeftTest = T.ltrim "  hello"  -- Result: "hello"
+
+-- Remove trailing whitespace
+trimRightExample : Text -> Text
+trimRightExample txt = T.rtrim txt
+
+trimRightTest : Text
+trimRightTest = T.rtrim "hello  "  -- Result: "hello"
+
+-- ============================================================================
+-- 6. SEARCHING AND FINDING
+-- ============================================================================
+
+-- Check if text contains a substring
+containsExample : Text -> Text -> Bool
+containsExample haystack needle = T.contains needle haystack
+
+containsTest1 : Bool
+containsTest1 = T.contains "world" "Hello, world!"  -- Result: True
+
+containsTest2 : Bool
+containsTest2 = T.contains "xyz" "Hello, world!"  -- Result: False
+
+-- Check if text starts with a prefix
+isPrefixOfExample : Text -> Text -> Bool
+isPrefixOfExample prefix txt = T.isPrefixOf prefix txt
+
+prefixTest1 : Bool
+prefixTest1 = T.isPrefixOf "Hello" "Hello, world!"  -- Result: True
+
+prefixTest2 : Bool
+prefixTest2 = T.isPrefixOf "world" "Hello, world!"  -- Result: False
+
+-- Check if text ends with a suffix
+isSuffixOfExample : Text -> Text -> Bool
+isSuffixOfExample suffix txt = T.isSuffixOf suffix txt
+
+suffixTest1 : Bool
+suffixTest1 = T.isSuffixOf "world!" "Hello, world!"  -- Result: True
+
+suffixTest2 : Bool
+suffixTest2 = T.isSuffixOf "Hello" "Hello, world!"  -- Result: False
+
+-- Check if text is an infix (substring)
+isInfixOfExample : Text -> Text -> Bool
+isInfixOfExample infix txt = T.isInfixOf infix txt
+
+infixTest : Bool
+infixTest = T.isInfixOf "lo, wo" "Hello, world!"  -- Result: True
+
+-- ============================================================================
+-- 7. SUBSTRING EXTRACTION
+-- ============================================================================
+
+-- Take first n characters
+takeExample : Int -> Text -> Text
+takeExample n txt = T.take n txt
+
+takeTest1 : Text
+takeTest1 = T.take 5 "Hello, world!"  -- Result: "Hello"
+
+takeTest2 : Text
+takeTest2 = T.take 100 "Short"  -- Result: "Short" (doesn't error)
+
+-- Drop first n characters
+dropExample : Int -> Text -> Text
+dropExample n txt = T.drop n txt
+
+dropTest1 : Text
+dropTest1 = T.drop 7 "Hello, world!"  -- Result: "world!"
+
+dropTest2 : Text
+dropTest2 = T.drop 100 "Short"  -- Result: ""
+
+-- Extract substring from start index with given length
+substringExample : Int -> Int -> Text -> Text
+substringExample start len txt = T.take len (T.drop start txt)
+
+substringTest : Text
+substringTest = substringExample 7 5 "Hello, world!"  -- Result: "world"
+
+-- Take characters from the right
+takeEndExample : Int -> Text -> Text
+takeEndExample n txt = T.takeEnd n txt
+
+takeEndTest : Text
+takeEndTest = T.takeEnd 6 "Hello, world!"  -- Result: "world!"
+
+-- Drop characters from the right
+dropEndExample : Int -> Text -> Text
+dropEndExample n txt = T.dropEnd n txt
+
+dropEndTest : Text
+dropEndTest = T.dropEnd 7 "Hello, world!"  -- Result: "Hello,"
+
+-- ============================================================================
+-- 8. SPLITTING TEXT
+-- ============================================================================
+
+-- Split text into list of texts by separator
+splitOnExample : Text -> Text -> [Text]
+splitOnExample separator txt = T.splitOn separator txt
+
+splitTest1 : [Text]
+splitTest1 = T.splitOn "," "apple,banana,cherry"
+-- Result: ["apple", "banana", "cherry"]
+
+splitTest2 : [Text]
+splitTest2 = T.splitOn " " "Hello DAML world"
+-- Result: ["Hello", "DAML", "world"]
+
+splitTest3 : [Text]
+splitTest3 = T.splitOn "," "no-commas"
+-- Result: ["no-commas"]
+
+-- Split text into lines (by newline)
+linesExample : Text -> [Text]
+linesExample txt = T.lines txt
+
+linesTest : [Text]
+linesTest = T.lines "Line 1\nLine 2\nLine 3"
+-- Result: ["Line 1", "Line 2", "Line 3"]
+
+-- Split text into words (by whitespace)
+wordsExample : Text -> [Text]
+wordsExample txt = T.words txt
+
+wordsTest : [Text]
+wordsTest = T.words "  Hello   DAML  world  "
+-- Result: ["Hello", "DAML", "world"]
+
+-- ============================================================================
+-- 9. JOINING TEXT
+-- ============================================================================
+
+-- Join list of texts with separator
+intercalateExample : Text -> [Text] -> Text
+intercalateExample separator txts = T.intercalate separator txts
+
+intercalateTest1 : Text
+intercalateTest1 = T.intercalate ", " ["apple", "banana", "cherry"]
+-- Result: "apple, banana, cherry"
+
+intercalateTest2 : Text
+intercalateTest2 = T.intercalate " " ["Hello", "DAML", "world"]
+-- Result: "Hello DAML world"
+
+-- Join lines (opposite of lines)
+unlinesExample : [Text] -> Text
+unlinesExample txts = T.unlines txts
+
+unlinesTest : Text
+unlinesTest = T.unlines ["Line 1", "Line 2", "Line 3"]
+-- Result: "Line 1\nLine 2\nLine 3\n"
+
+-- Join words (opposite of words)
+unwordsExample : [Text] -> Text
+unwordsExample txts = T.unwords txts
+
+unwordsTest : Text
+unwordsTest = T.unwords ["Hello", "DAML", "world"]
+-- Result: "Hello DAML world"
+
+-- ============================================================================
+-- 10. TEXT REPLACEMENT
+-- ============================================================================
+
+-- Replace first occurrence of a substring
+replaceExample : Text -> Text -> Text -> Text
+replaceExample old new txt = T.replace old new txt
+
+replaceTest1 : Text
+replaceTest1 = T.replace "world" "DAML" "Hello, world!"
+-- Result: "Hello, DAML!"
+
+replaceTest2 : Text
+replaceTest2 = T.replace "foo" "bar" "foo foo foo"
+-- Result: "bar bar bar"
+
+replaceTest3 : Text
+replaceTest3 = T.replace "xyz" "abc" "Hello, world!"
+-- Result: "Hello, world!" (no change if not found)
+
+-- ============================================================================
+-- 11. TEXT REVERSAL
+-- ============================================================================
+
+-- Reverse a text string
+reverseExample : Text -> Text
+reverseExample txt = T.reverse txt
+
+reverseTest1 : Text
+reverseTest1 = T.reverse "Hello"  -- Result: "olleH"
+
+reverseTest2 : Text
+reverseTest2 = T.reverse "racecar"  -- Result: "racecar"
+
+-- ============================================================================
+-- 12. TEXT REPLICATION
+-- ============================================================================
+
+-- Replicate text n times
+replicateExample : Int -> Text -> Text
+replicateExample n txt = T.replicate n txt
+
+replicateTest1 : Text
+replicateTest1 = T.replicate 3 "Hi!"  -- Result: "Hi!Hi!Hi!"
+
+replicateTest2 : Text
+replicateTest2 = T.replicate 5 "-"  -- Result: "-----"
+
+-- ============================================================================
+-- 13. CHARACTER OPERATIONS
+-- ============================================================================
+
+-- Explode text into list of single-character texts
+explodeExample : Text -> [Text]
+explodeExample txt = T.explode txt
+
+explodeTest : [Text]
+explodeTest = T.explode "Hello"
+-- Result: ["H", "e", "l", "l", "o"]
+
+-- Implode list of single characters back into text
+implodeExample : [Text] -> Text
+implodeExample chars = T.implode chars
+
+implodeTest : Text
+implodeTest = T.implode ["H", "e", "l", "l", "o"]
+-- Result: "Hello"
+
+-- ============================================================================
+-- 14. NUMERIC CONVERSIONS
+-- ============================================================================
+
+-- Parse text as Int
+parseIntExample : Text -> Optional Int
+parseIntExample txt = parseInt txt
+
+parseIntTest1 : Optional Int
+parseIntTest1 = parseInt "123"  -- Result: Some 123
+
+parseIntTest2 : Optional Int
+parseIntTest2 = parseInt "-456"  -- Result: Some (-456)
+
+parseIntTest3 : Optional Int
+parseIntTest3 = parseInt "abc"  -- Result: None
+
+-- Parse text as Decimal
+parseDecimalExample : Text -> Optional Decimal
+parseDecimalExample txt = parseDecimal txt
+
+parseDecimalTest1 : Optional Decimal
+parseDecimalTest1 = parseDecimal "123.456"  -- Result: Some 123.456
+
+parseDecimalTest2 : Optional Decimal
+parseDecimalTest2 = parseDecimal "abc"  -- Result: None
+
+-- Convert values to text using show
+showIntExample : Int -> Text
+showIntExample n = show n
+
+showDecimalExample : Decimal -> Text
+showDecimalExample d = show d
+
+showBoolExample : Bool -> Text
+showBoolExample b = show b
+
+-- ============================================================================
+-- 15. COMPARISON AND ORDERING
+-- ============================================================================
+
+-- Texts can be compared lexicographically
+compareExample1 : Bool
+compareExample1 = "apple" < "banana"  -- Result: True
+
+compareExample2 : Bool
+compareExample2 = "zebra" > "apple"  -- Result: True
+
+compareExample3 : Bool
+compareExample3 = "hello" == "hello"  -- Result: True
+
+compareExample4 : Bool
+compareExample4 = "Hello" /= "hello"  -- Result: True (case-sensitive)
+
+-- ============================================================================
+-- PRACTICAL EXAMPLES
+-- ============================================================================
+
+-- Example 1: Email validation (basic)
+isValidEmail : Text -> Bool
+isValidEmail email =
+  let parts = T.splitOn "@" email
+      hasAt = T.contains "@" email
+      hasDot = T.contains "." email
+      notEmpty = not (T.null email)
+  in notEmpty && hasAt && hasDot && length parts == 2
+
+-- Example 2: Extract domain from email
+extractDomain : Text -> Optional Text
+extractDomain email =
+  let parts = T.splitOn "@" email
+  in if length parts == 2
+     then Some (parts !! 1)
+     else None
+
+-- Example 3: Format name (capitalize first letter)
+capitalizeName : Text -> Text
+capitalizeName name =
+  if T.null name then name
+  else
+    let first = T.toUpper (T.take 1 name)
+        rest = T.toLower (T.drop 1 name)
+    in first <> rest
+
+-- Example 4: Clean and normalize text
+normalizeText : Text -> Text
+normalizeText txt =
+  T.toLower (T.trim txt)
+
+-- Example 5: Count words in text
+countWords : Text -> Int
+countWords txt = length (T.words txt)
+
+-- Example 6: Truncate text with ellipsis
+truncateText : Int -> Text -> Text
+truncateText maxLen txt =
+  if T.length txt <= maxLen then txt
+  else T.take (maxLen - 3) txt <> "..."
+
+-- Example 7: Check if palindrome (case-insensitive)
+isPalindrome : Text -> Bool
+isPalindrome txt =
+  let cleaned = T.toLower (T.trim txt)
+      reversed = T.reverse cleaned
+  in cleaned == reversed
+
+-- Example 8: Create initials from name
+getInitials : Text -> Text
+getInitials name =
+  let words = T.words name
+      firstLetters = map (\w -> T.toUpper (T.take 1 w)) words
+  in T.intercalate "" firstLetters
+
+-- Example 9: Mask sensitive data (e.g., credit card)
+maskData : Text -> Text
+maskData txt =
+  let len = T.length txt
+  in if len <= 4 then txt
+     else T.replicate (len - 4) "*" <> T.takeEnd 4 txt
+
+-- Example 10: Parse CSV row
+parseCSVRow : Text -> [Text]
+parseCSVRow row = T.splitOn "," row
+
+-- Example 11: Build URL query string
+buildQueryString : [(Text, Text)] -> Text
+buildQueryString params =
+  let pairs = map (\(k, v) -> k <> "=" <> v) params
+  in T.intercalate "&" pairs
+
+-- Example 12: Extract file extension
+getFileExtension : Text -> Optional Text
+getFileExtension filename =
+  let parts = T.splitOn "." filename
+  in if length parts > 1
+     then Some (parts !! (length parts - 1))
+     else None
+
+-- Example 13: Remove all whitespace
+removeWhitespace : Text -> Text
+removeWhitespace txt = T.replace " " "" (T.replace "\n" "" (T.replace "\t" "" txt))
+
+-- Example 14: Convert snake_case to camelCase
+snakeToCamel : Text -> Text
+snakeToCamel txt =
+  let parts = T.splitOn "_" txt
+      capitalized = case parts of
+        [] -> []
+        (x :: xs) -> x :: map capitalizeName xs
+  in T.intercalate "" capitalized
+
+-- Example 15: Validate password strength (basic)
+isStrongPassword : Text -> Bool
+isStrongPassword pwd =
+  let hasLength = T.length pwd >= 8
+      hasUpper = pwd /= T.toLower pwd
+      hasLower = pwd /= T.toUpper pwd
+      hasNumber = any (\c -> T.contains c pwd) ["0","1","2","3","4","5","6","7","8","9"]
+  in hasLength && hasUpper && hasLower && hasNumber
+
+-- ============================================================================
+-- TEST SCRIPT - Demonstrates all text operations
+-- ============================================================================
+
+testTextOperations : Script ()
+testTextOperations = do
+  debug "============================================"
+  debug "DAML TEXT MODULE - COMPREHENSIVE TEST"
+  debug "============================================\n"
+
+  -- LENGTH AND EMPTINESS
+  debug "=== LENGTH AND EMPTINESS ==="
+  debug $ "Length of 'Hello': " <> show (T.length "Hello")
+  debug $ "Is empty string null? " <> show (T.null "")
+  debug $ "Is 'Hello' null? " <> show (T.null "Hello")
+
+  -- CONCATENATION
+  debug "\n=== CONCATENATION ==="
+  debug $ "Concat with <>: " <> ("Hello, " <> "World!")
+  debug $ "Multi concat: " <> multiConcat
+
+  -- CASE CONVERSION
+  debug "\n=== CASE CONVERSION ==="
+  debug $ "toUpper 'hello': " <> T.toUpper "hello"
+  debug $ "toLower 'WORLD': " <> T.toLower "WORLD"
+
+  -- TRIMMING
+  debug "\n=== TRIMMING ==="
+  debug $ "trim '  hello  ': '" <> T.trim "  hello  " <> "'"
+  debug $ "ltrim '  hello': '" <> T.ltrim "  hello" <> "'"
+  debug $ "rtrim 'hello  ': '" <> T.rtrim "hello  " <> "'"
+
+  -- SEARCHING
+  debug "\n=== SEARCHING ==="
+  debug $ "contains 'world' in 'Hello, world!': " <> show (T.contains "world" "Hello, world!")
+  debug $ "isPrefixOf 'Hello': " <> show (T.isPrefixOf "Hello" "Hello, world!")
+  debug $ "isSuffixOf 'world!': " <> show (T.isSuffixOf "world!" "Hello, world!")
+
+  -- SUBSTRING EXTRACTION
+  debug "\n=== SUBSTRING EXTRACTION ==="
+  debug $ "take 5 'Hello, world!': " <> T.take 5 "Hello, world!"
+  debug $ "drop 7 'Hello, world!': " <> T.drop 7 "Hello, world!"
+  debug $ "takeEnd 6 'Hello, world!': " <> T.takeEnd 6 "Hello, world!"
+
+  -- SPLITTING
+  debug "\n=== SPLITTING ==="
+  debug $ "splitOn ',' 'a,b,c': " <> show (T.splitOn "," "a,b,c")
+  debug $ "words 'Hello DAML world': " <> show (T.words "Hello DAML world")
+  debug $ "lines 'L1\\nL2\\nL3': " <> show (T.lines "L1\nL2\nL3")
+
+  -- JOINING
+  debug "\n=== JOINING ==="
+  debug $ "intercalate ', ' [a,b,c]: " <> T.intercalate ", " ["a", "b", "c"]
+  debug $ "unwords [Hello,DAML]: " <> T.unwords ["Hello", "DAML"]
+
+  -- REPLACEMENT
+  debug "\n=== REPLACEMENT ==="
+  debug $ "replace 'world' with 'DAML': " <> T.replace "world" "DAML" "Hello, world!"
+
+  -- REVERSAL
+  debug "\n=== REVERSAL ==="
+  debug $ "reverse 'Hello': " <> T.reverse "Hello"
+
+  -- REPLICATION
+  debug "\n=== REPLICATION ==="
+  debug $ "replicate 3 'Hi!': " <> T.replicate 3 "Hi!"
+
+  -- CHARACTER OPERATIONS
+  debug "\n=== CHARACTER OPERATIONS ==="
+  debug $ "explode 'Hello': " <> show (T.explode "Hello")
+  debug $ "implode [H,i]: " <> T.implode ["H", "i"]
+
+  -- NUMERIC PARSING
+  debug "\n=== NUMERIC PARSING ==="
+  debug $ "parseInt '123': " <> show (parseInt "123")
+  debug $ "parseDecimal '123.45': " <> show (parseDecimal "123.45")
+
+  debug "\n============================================"
+  return ()
+
+-- ============================================================================
+-- TEST PRACTICAL EXAMPLES
+-- ============================================================================
+
+testPracticalExamples : Script ()
+testPracticalExamples = do
+  debug "============================================"
+  debug "PRACTICAL EXAMPLES TEST"
+  debug "============================================\n"
+
+  -- Email validation
+  debug "=== EMAIL VALIDATION ==="
+  debug $ "Is 'user@example.com' valid? " <> show (isValidEmail "user@example.com")
+  debug $ "Is 'invalid' valid? " <> show (isValidEmail "invalid")
+  debug $ "Extract domain: " <> show (extractDomain "user@example.com")
+
+  -- Name formatting
+  debug "\n=== NAME FORMATTING ==="
+  debug $ "Capitalize 'john': " <> capitalizeName "john"
+  debug $ "Initials 'John Doe': " <> getInitials "John Doe"
+
+  -- Text normalization
+  debug "\n=== TEXT NORMALIZATION ==="
+  debug $ "Normalize '  HELLO  ': '" <> normalizeText "  HELLO  " <> "'"
+
+  -- Word count
+  debug "\n=== WORD COUNT ==="
+  debug $ "Count words in 'Hello DAML world': " <> show (countWords "Hello DAML world")
+
+  -- Truncation
+  debug "\n=== TRUNCATION ==="
+  debug $ "Truncate to 10: " <> truncateText 10 "This is a long text string"
+
+  -- Palindrome check
+  debug "\n=== PALINDROME CHECK ==="
+  debug $ "Is 'racecar' a palindrome? " <> show (isPalindrome "racecar")
+  debug $ "Is 'hello' a palindrome? " <> show (isPalindrome "hello")
+
+  -- Data masking
+  debug "\n=== DATA MASKING ==="
+  debug $ "Mask '1234567890': " <> maskData "1234567890"
+
+  -- CSV parsing
+  debug "\n=== CSV PARSING ==="
+  debug $ "Parse CSV 'a,b,c': " <> show (parseCSVRow "apple,banana,cherry")
+
+  -- Query string
+  debug "\n=== QUERY STRING ==="
+  debug $ "Build query: " <> buildQueryString [("name", "John"), ("age", "30")]
+
+  -- File extension
+  debug "\n=== FILE EXTENSION ==="
+  debug $ "Extension of 'file.txt': " <> show (getFileExtension "file.txt")
+  debug $ "Extension of 'archive.tar.gz': " <> show (getFileExtension "archive.tar.gz")
+
+  -- Snake to camel case
+  debug "\n=== SNAKE TO CAMEL ==="
+  debug $ "snake_to_camel 'hello_world': " <> snakeToCamel "hello_world"
+
+  -- Password validation
+  debug "\n=== PASSWORD VALIDATION ==="
+  debug $ "Is 'Password123' strong? " <> show (isStrongPassword "Password123")
+  debug $ "Is 'weak' strong? " <> show (isStrongPassword "weak")
+
+  debug "\n============================================"
+  return ()
+
+-- ============================================================================
+-- QUICK REFERENCE GUIDE
+-- ============================================================================
+
+{-
+TEXT MODULE FUNCTION QUICK REFERENCE:
+
+LENGTH & CHECKING:
+  - length : Text -> Int                  -- Get text length
+  - null : Text -> Bool                   -- Check if empty
+
+CONCATENATION:
+  - <> : Text -> Text -> Text             -- Concat operator
+  - append : Text -> Text -> Text         -- Concat function
+
+CASE:
+  - toUpper : Text -> Text                -- Convert to uppercase
+  - toLower : Text -> Text                -- Convert to lowercase
+
+TRIMMING:
+  - trim : Text -> Text                   -- Remove leading/trailing whitespace
+  - ltrim : Text -> Text                  -- Remove leading whitespace
+  - rtrim : Text -> Text                  -- Remove trailing whitespace
+
+SEARCHING:
+  - contains : Text -> Text -> Bool       -- Check if contains substring
+  - isPrefixOf : Text -> Text -> Bool     -- Check if starts with
+  - isSuffixOf : Text -> Text -> Bool     -- Check if ends with
+  - isInfixOf : Text -> Text -> Bool      -- Check if contains substring
+
+EXTRACTION:
+  - take : Int -> Text -> Text            -- Take first n chars
+  - drop : Int -> Text -> Text            -- Drop first n chars
+  - takeEnd : Int -> Text -> Text         -- Take last n chars
+  - dropEnd : Int -> Text -> Text         -- Drop last n chars
+
+SPLITTING:
+  - splitOn : Text -> Text -> [Text]      -- Split by separator
+  - words : Text -> [Text]                -- Split by whitespace
+  - lines : Text -> [Text]                -- Split by newlines
+
+JOINING:
+  - intercalate : Text -> [Text] -> Text  -- Join with separator
+  - unwords : [Text] -> Text              -- Join with spaces
+  - unlines : [Text] -> Text              -- Join with newlines
+
+MODIFICATION:
+  - replace : Text -> Text -> Text -> Text  -- Replace occurrences
+  - reverse : Text -> Text                -- Reverse text
+  - replicate : Int -> Text -> Text       -- Repeat text n times
+
+CHARACTERS:
+  - explode : Text -> [Text]              -- Split into characters
+  - implode : [Text] -> Text              -- Join characters
+
+PARSING:
+  - parseInt : Text -> Optional Int       -- Parse as Int
+  - parseDecimal : Text -> Optional Decimal -- Parse as Decimal
+-}

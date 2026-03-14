@@ -1,0 +1,32 @@
+module Lab3 where
+import Daml.Script
+
+class Reachable i o where
+  reachOut : i -> o
+  
+
+instance Reachable Person Text where
+  reachOut p = "Hello " <> p.name <> " at " <> p.email
+
+data Person = Person with
+  name : Text
+  email : Text
+    deriving (Eq, Show, Ord)
+
+testLab2 : Script ()
+testLab2 = script do
+  let 
+    p1 = Person with
+      name = "Alice" 
+      email = "alice@earth.com"
+  let 
+    p2 = Person with 
+      name = "Bob" 
+      email = "bob@earth.com"
+  
+  let message : Text = reachOut p1
+  debug p1
+  debug (p1 == p2)
+  debug (p1 < p2)
+  debug $ message
+  return ()

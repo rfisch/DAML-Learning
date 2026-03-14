@@ -1,0 +1,2 @@
+module Quadratic where
+import Daml.Script

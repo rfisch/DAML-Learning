@@ -1,0 +1,8 @@
+module Lab3 where
+import Daml.Script
+
+
+data Person = Person with
+	name : Text
+	email : Text
+	deriving (Eq, Show, Ord)

@@ -1,0 +1,61 @@
+module Lab4 where
+import Daml.Script
+
+getLetterGradeUsingIf: Decimal -> Text
+getScoreUsingCase: Text -> Text
+getLEtterGradUsingGuards: Decimal -> Text
+getAverageGradeLetter: Decimal -> Decimal -> Text
+
+
+getLetterGradeUsingIf score =
+  if score >= 90.0 then "A"
+  else if score >= 80.0 then "B"
+  else if score >= 70.0 then "C"
+  else if score >= 60.0 then "D"
+  else "F"
+
+getScoreUsingCase letterGrade =
+  case letterGrade of
+    "A" -> "90.0 or above"
+    "B" -> "from 80.0 to less than 90.0"
+    "C" -> "from 70.0 to less than 80.0"
+    "F" -> "Less than 70.0"
+
+
+getLetterGradUsingGuards score
+  | score >= 90.0 = "A"
+  | score >= 80.0 = "B"
+  | score >= 70.0 = "C"
+  | otherwise = "F"
+  
+getAverageGradeLetter score1 score2 
+  | average >= 90.0 = "A"
+  | average >= 80.0 = "B"
+  | average >= 70.0 = "C"
+  | otherwise = "F"
+  where average = (score1 + score2) / 2
+
+testLab4 : Script ()
+testLab4 = script do
+  debug $ getLetterGradeUsingIf 90.0
+    debug $ getLetterGradeUsingIf 85.0
+    debug $ getLetterGradeUsingIf 75.0
+    debug $ getLetterGradeUsingIf 65.00
+    debug "----------"
+    debug $ getScoreUsingCase "A"
+    debug $ getScoreUsingCase "B"
+    debug $ getScoreUsingCase "C"
+    debug $ getScoreUsingCase "F"
+    debug $ getScoreUsingCase "X"
+    debug "----------"
+    debug $ getLetterGradeUsingGuards 90.0
+    debug $ getLetterGradeUsingGuards 80.0
+    debug $ getLetterGradeUsingGuards 70.0
+    debug $ getLetterGradeUsingGuards 60.0
+    debug "----------"
+    debug $ getAverageGradeLetter 75.0 83.0
+    debug $ getAverageGradeLetter 95.0 83.0
+    debug $ getAverageGradeLetter 98.0 83.0
+    debug $ getAverageGradeLetter 60.0 70.0
+
+    return()

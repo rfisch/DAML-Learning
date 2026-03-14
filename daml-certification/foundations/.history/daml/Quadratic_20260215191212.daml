@@ -1,0 +1,17 @@
+module Quadratic where
+import Daml.Script
+
+quadFunction x y z = (3 * (x ^ 2)) + (2 * y) + z
+
+doubleMe x = x * 2
+doubleUs x y = doubleMe x + doubleMe y
+
+
+testQuadFunction : Script ()
+testQuadFunction = do
+	debug $ quadFunction 1 2 3
+	let q = \x y z -> (3 * (x ^ 2)) + (2 * y) + z
+	debug $ q 1 2 3
+
+	debug $ doubleMe 3
+	debug $ doubleUs 3 4

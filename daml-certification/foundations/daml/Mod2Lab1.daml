@@ -1,0 +1,77 @@
+module Mod2Lab1 where
+
+template CLPAccount
+  with
+    id: Text
+    customer: Party
+    airline: Party
+    name: Text
+    address: Text
+    email: Text
+    accountTimestamp: Time
+    dob: Date
+    points: Int
+  where
+    signatory customer, airline
+
+    key (airline, id) : (Party, Text)
+    maintainer key._1
+
+template CLPApplication
+  with
+    id: Text
+    customer : Party
+    airline: Party
+    name: Text
+    address: Text
+    email: Text
+    phone: Optional Text
+    appTimestamp: Time
+    dob: Date
+  where
+    signatory customer
+    observer airline
+
+    choice SubmitApplication: ContractId CLPApplication
+      with
+        id: Text
+        customer: Party
+        airline: Party
+        name: Text
+        address: Text
+        email: Text
+        phone: Optional Text
+        appTimestamp: Time
+        dob: Date
+      controller customer
+      do 
+        create this 
+
+    choice AcceptApplication: ContractId CLPAccount
+      with
+        id: Text
+        customer : Party
+        airline: Party
+        name: Text
+        address: Text
+        email: Text
+        accountTimestamp: Time
+        dob: Date
+      controller airline
+      do 
+        create CLPAccount with 
+          id = id
+          customer = customer
+          airline = airline
+          name = name
+          address = address
+          email = email
+          accountTimestamp = accountTimestamp
+          dob = dob
+          points = 0
+      
+    choice RejectApplication: ()
+      with
+      controller airline
+      do 
+        return (trace "Application rejected" ())

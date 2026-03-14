@@ -1,0 +1,7 @@
+module Lab5 where
+import Daml.Script
+
+
+
+song = [("do", "a deer, a female deer"), ("re", "a drop of golden sun"), ("mi", "a name, I call myself"), ("fa", "a long long way to run")]
+

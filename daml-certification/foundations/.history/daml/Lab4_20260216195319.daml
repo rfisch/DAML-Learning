@@ -1,0 +1,89 @@
+module Lab4 where
+import Daml.Script
+import DA.Math (sqrtDecimal)
+import DA.List
+import DA.Optional(isSome)
+
+getLetterGradeUsingIf: Decimal -> Text
+getScoreUsingCase: Text -> Text
+getLetterGradUsingGuards: Decimal -> Text
+getAverageGradeLetter: Decimal -> Decimal -> Text
+
+getLetterGradeUsingIf score =
+  if score >= 90.0 then "A"
+  else if score >= 80.0 then "B"
+  else if score >= 70.0 then "C"
+  else "F"
+
+getScoreUsingCase letterGrade =
+  case letterGrade of
+    "A" -> "Score 90"
+    "B" -> "80 to 90"
+    "C" -> "70 to 80"
+    "F" -> "Less than 70"
+    _   -> "Invalid grade letter"
+
+getLetterGradUsingGuards score
+  | score >= 90.0 = "A"
+  | score >= 80.0 = "B"
+  | score >= 70.0 = "C"
+  | otherwise = "F"
+
+getAverageGradeLetter score1 score2 
+  | average >= 90.0 = "A"
+  | average >= 80.0 = "B"
+  | average >= 70.0 = "C"
+  | otherwise = "F"
+  where average = (score1 + score2) / 2.0
+
+triangleArea : List[Decimal] -> Either Text Decimal
+triangleArea dims =
+  if (dims.length \= 3) then Left "Error: Triange has 3 sides."
+  else
+    let a = dims !! 0
+        b = dims !! 1
+        c = dims !! 2 
+      in 
+        if isSome(dims.find( \x -> x <= 0.0))
+        then Left "Error: Triangle sides must be positive."
+        else
+          if isSome(dims.find( \x -> x >= (a + b + c - x)))
+          then Left "Error: This can't be a triangle as sum of any two sides must be greater than the third"
+          else
+            let s = (a + b + c) / 2.0
+            in Right (sqrt (s * (s - a) * (s - b) * (s - c)))
+  
+
+testLab4 : Script ()
+testLab4 = script do
+  debug $ getLetterGradeUsingIf 90.0
+  debug $ getLetterGradeUsingIf 85.0
+  debug $ getLetterGradeUsingIf 75.0
+  debug $ getLetterGradeUsingIf 65.00
+  debug "----------"
+  debug $ getScoreUsingCase "A"
+  debug $ getScoreUsingCase "B"
+  debug $ getScoreUsingCase "C"
+  debug $ getScoreUsingCase "F"
+  debug $ getScoreUsingCase "X"
+  debug "----------"
+  debug $ getLetterGradUsingGuards 90.0
+  debug $ getLetterGradUsingGuards 80.0
+  debug $ getLetterGradUsingGuards 70.0
+  debug $ getLetterGradUsingGuards 60.0
+  debug "----------"
+  debug $ getAverageGradeLetter 75.0 83.0
+  debug $ getAverageGradeLetter 95.0 83.0
+  debug $ getAverageGradeLetter 98.0 83.0
+  debug $ getAverageGradeLetter 60.0 70.0
+
+  return()
+
+  testTriangle : Script()
+  testTriangle = script do
+    debug $ triangleArea [4.0, 2.0, 5.0]
+    debug $ triangleArea [1.0, 2.0, 3.0]
+    debug $ triangleArea [1.0, 2.0]
+    debug $ triangleArea [1.0, 2.0, 0.0]
+
+    return ()

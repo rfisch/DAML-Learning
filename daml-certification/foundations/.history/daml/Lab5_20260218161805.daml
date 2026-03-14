@@ -1,0 +1,24 @@
+module Lab5 where
+import Daml.Script
+import DA.Map qualified as Map
+import DA.Map (Map)
+
+song = [("do", "a deer, a female deer"), ("re", "a drop of golden sun"), ("mi", "a name, I call myself"), ("fa", "a long long way to run")]
+
+-- Build a Map from a list of tuples
+songMap : Map Text Text
+songMap = Map.fromList song
+
+testScript : Script ()
+testScript = do
+  let x = map fst song
+  let y = map snd song
+  debug $ "Keys: " <> show x
+  debug $ "Values: " <> show y
+
+multiTermFrequency : Text List[Text] List[Int]
+
+multiTermFrequency = x y -> Map Text (List[Int])
+	where
+		x = Map.fromList . zip y
+		y = map fst song
