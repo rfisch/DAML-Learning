@@ -1,0 +1,23 @@
+module Doreme where
+
+import DA.List
+import Daml.Script
+
+-- Define your song list at the top level (no 'let')
+song : [(Text, Text)]
+song =
+  [ ("do", "a deer, a female deer")
+  , ("re", "a drop of golden sun")
+  , ("mi", "a name, I call myself")
+  , ("fa", "a long long way to run")
+  ]
+
+-- Use the length function to count items
+splitNum : Int
+splitNum = length song
+
+-- Test script
+testFunctions : Script ()
+testFunctions = script do
+  debug ("Number of notes: " <> show splitNum)
+  return ()

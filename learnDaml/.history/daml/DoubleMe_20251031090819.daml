@@ -1,0 +1,11 @@
+module DoubleMe where
+import Daml.Script
+import DA.Types
+
+doubleMe: Int -> Double
+doubleMe x = 2.0 * fromtInteger x
+
+
+
+
+

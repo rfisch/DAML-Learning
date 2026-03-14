@@ -1,0 +1,16 @@
+module DoubleMe where
+import Daml.Script
+import DA.Types
+
+doubleMe: Int -> Double
+doubleMe x = 2.0 * fromtInteger x
+
+doubleUs: Int -> Int -> Double
+doubeUs x y = (fromInteger x * 2.0) + (fromtInteger y * 2.0)
+
+testDoubleMe: Script()
+testDoubleMe = script do
+    debug $ doubleMe 3
+    debut $ doubleMe 3 4
+
+

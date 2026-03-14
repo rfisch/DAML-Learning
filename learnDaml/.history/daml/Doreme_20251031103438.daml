@@ -1,0 +1,17 @@
+module Doreme where
+
+import DA.Tuple
+import DA.List
+import Daml.Script
+
+song : [(Text, Text)]
+let song = [("do", "a deer, a female deer"), ("re", "a drop of golden sun"), ("mi", "a name, I call myself"), ("fa", "a long long way to run")]
+
+splitNum : Int
+let splitNum = song.size
+
+testFunctions: Script()
+testFunctions = script do
+    debug $ increment 3
+    debug $ add 3 3
+    debug $ mul 3 3

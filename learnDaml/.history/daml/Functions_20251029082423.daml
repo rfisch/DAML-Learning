@@ -1,0 +1,9 @@
+module Functions where
+import Daml.Script
+
+increment: Int -> Int
+increment n = n + 1
+
+testFunctions: Script()
+testFunctions = script do
+    debug $ increment 3

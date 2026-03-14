@@ -1,0 +1,11 @@
+module DoubleMe where
+
+import DA.Types  -- 👈 REQUIRED for Double, Int, fromInt, etc.
+
+-- Takes an Int and returns its double as a Double
+doubleMe : Int -> Decimal
+doubleMe x = 2.0 * fromInt x
+
+-- Takes two Ints, doubles each, adds them, and returns a Double
+doubleUs : Int -> Int -> Decimal
+doubleUs x y = doubleMe x + doubleMe y

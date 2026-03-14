@@ -1,0 +1,14 @@
+module HelloWorld where
+
+import Daml.Script
+
+-- Define greet as a function that takes a Text argument
+greet : Text -> Text
+greet name =
+    let x = "World"
+    in "Hello " <> name <> " from " <> x
+
+-- Define a Daml script that prints the greeting
+testHello : Script ()
+testHello = script do
+    debug (greet "Ryan")

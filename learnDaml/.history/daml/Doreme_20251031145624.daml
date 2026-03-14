@@ -1,0 +1,30 @@
+module Doreme where
+
+import DA.List
+import Daml.Script
+import DA.Map
+
+
+-- Your list of (note, lyric)
+song : [(Text, Text)]
+song =
+  [ ("do", "a deer, a female deer")
+  , ("re", "a drop of golden sun")
+  , ("mi", "a name, I call myself")
+  , ("fa", "a long long way to run")
+  ]
+
+-- Split list of tuples into two lists using unzip
+splitSong : [(Text, Text)] -> ([Text], [Text])
+splitSong pairs = unzip pairs
+
+songMap : Map Text Text
+songMap = fromList song
+
+
+testFunctions : Script ()
+testFunctions = script do
+  let (notes, lyrics) = splitSong song
+  debug ("Notes: " <> show notes)
+  debug ("Lyrics: " <> show lyrics)
+  return ()

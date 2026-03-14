@@ -1,0 +1,11 @@
+sdk-version: 2.10.2
+name: fundamentals-cert-exam
+version: 1.0.0
+source: daml/Main.daml
+scenario: Main:mainScenario
+parties:
+- Alice
+- Bob
+dependencies:
+- daml-prim
+- daml-stdlib

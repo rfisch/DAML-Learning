@@ -1,0 +1,11 @@
+module QuadFunction where
+import Daml.Script
+
+quadFunction: Int -> Int -> Int -> Int
+quadFunction x y z = (3 * x^2) + (2 * y) + z
+
+
+testQuadFunction: Script()
+testQuadFunction = script do
+    debug $ quadFunction 1 2 3
+
